@@ -1,0 +1,64 @@
+---
+title: "Bayes_Practice"
+author: "Austin"
+date: "12/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, include=FALSE}
+library(tidyverse)
+```
+
+```{r notes, include=FALSE}
+## 
+
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+prior = c(0.4, 0.4 ,0.1, 0.1)
+lik = c(1, 0.01, 1,1)
+h = prior*lik
+Z = sum(h)
+post = prior*lik/Z
+print(post)
+
+## buses
+bus_prior_values = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+bus_prior = rep(1/11, 11)
+bus_lik = dbinom(2,5,bus_prior_values)
+
+bus_h =bus_prior*bus_lik
+bus_post = bus_h/(sum(h))
+```
+
+```{r modify_amato_metadata, include-FALSE}
+amato_metadata <- read.csv("/home/hammera/SraRunTable.txt", sep=",")
+
+amato_metagenome_data <- amato_metadata %>%
+  filter(AvgSpotLen >=160)
+
+gsub(pattern = " ", replacement="_", selected_metadata$host_scientific_name)
+selected_metadata <- amato_metagenome_data %>%
+  select(host_scientific_name, host_common_name, Run, diet, AvgSpotLen)
+selected_metadata$host_name <- gsub(pattern = " ", replacement="_", selected_metadata$host_scientific_name)
+selected_metadata$common_name <- gsub(pattern = " ", replacement="_", selected_metadata$host_common_name)
+
+the_basics <- selected_metadata %>%
+  select(Run, diet, host_name, common_name)
+
+write_tsv(the_basics, "amato_metdata.tsv")
+
+
+
+```
+
